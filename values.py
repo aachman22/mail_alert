@@ -1,3 +1,4 @@
 mailserver = 'imap.gmail.com'
-emailid = "Your gmail id"
-password = "Your password"
+emailid = "Enter gmail id"
+password = "Enter password"
+keyword = "Enter keyword"
