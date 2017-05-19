@@ -23,16 +23,14 @@ status, folderList = connection.list()
 # Selecting the folder
 status, data = connection.select('INBOX')
 
-# Search using keywords in INBOX
-
-status, message = connection.search(None, '(SUBJECT "Enter your keyword")')
+# Search using keyword in INBOX
+status, message = connection.search(None, '(SUBJECT "%s")' %keyword)
 
 # Store the list of ids in a list
 strmessage = message[0].decode("utf-8")
 idlist = strmessage.split(' ')
-# print(idlist)
 
-# Fetch the message geader using the ID
+# Fetch the message header using the ID
 for i in range(len(idlist)):
     status, msgHead = connection.fetch(idlist[i], '(BODY.PEEK[HEADER])')
     x1 = msgHead
