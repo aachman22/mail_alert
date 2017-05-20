@@ -1,6 +1,18 @@
 import imaplib
 from values import *
 
+import time
+import tkinter as tk
+from tkinter import messagebox
+
+# Start timer
+starttime=time.time()
+
+# Create invisible window for alert
+root = tk.Tk()
+root.withdraw()
+
+
 # Open connection
 connection = imaplib.IMAP4_SSL(mailserver)
 
@@ -9,7 +21,6 @@ connection.login(emailid, password)
 
 # Get folder info of INBOX
 folderStat, unseenInfo = connection.status('INBOX', "(UNSEEN)")
-# print(unseenInfo[0])
 
 # Decoding byte object to string object
 x = unseenInfo[0].decode("utf-8")
@@ -40,7 +51,3 @@ for i in range(len(idlist)):
     x5 = x4.split('\r')
     subject = x5[0]
     print("The subject is", subject)
-
-# Fetch the full message
-# status, fullMsg = connection.fetch('4761', '(RFC822)')
-# print(fullMsg)
