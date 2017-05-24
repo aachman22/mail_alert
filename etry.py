@@ -1,17 +1,17 @@
 import imaplib
+import test
+from test import oldmaxid
 from values import *
-
 import time
 import tkinter as tk
 from tkinter import messagebox
 
 # Start timer
-starttime=time.time()
+starttime = time.time()
 
 # Create invisible window for alert
 root = tk.Tk()
 root.withdraw()
-
 
 # Open connection
 connection = imaplib.IMAP4_SSL(mailserver)
@@ -19,35 +19,43 @@ connection = imaplib.IMAP4_SSL(mailserver)
 # Login
 connection.login(emailid, password)
 
-# Get folder info of INBOX
-folderStat, unseenInfo = connection.status('INBOX', "(UNSEEN)")
+while True:
 
-# Decoding byte object to string object
-x = unseenInfo[0].decode("utf-8")
+    time.sleep(5.0 - ((time.time() - starttime) % 5.0))
 
-# Create counter for unread emails
-unreadCounter = int(x.split()[2].strip(').,]'))
+    # Get folder info of INBOX
+    folderStat, unseenInfo = connection.status('INBOX', "(UNSEEN)")
 
-# Folder list
-status, folderList = connection.list()
+    # Decoding byte object to string object
+    x = unseenInfo[0].decode("utf-8")
 
-# Selecting the folder
-status, data = connection.select('INBOX')
+    # Create counter for unread emails
+    unreadCounter = int(x.split()[2].strip(').,]'))
 
-# Search using keyword in INBOX
-status, message = connection.search(None, '(SUBJECT "%s")' %keyword)
+    # Folder list
+    status, folderList = connection.list()
 
-# Store the list of ids in a list
-strmessage = message[0].decode("utf-8")
-idlist = strmessage.split(' ')
+    # Selecting the folder
+    status, data = connection.select('INBOX')
 
-# Fetch the message header using the ID
-for i in range(len(idlist)):
-    status, msgHead = connection.fetch(idlist[i], '(BODY.PEEK[HEADER])')
-    x1 = msgHead
-    x2 = x1[0][1].decode("utf-8")
-    x3 = x2.split('Subject')
-    x4 = x3[1]
-    x5 = x4.split('\r')
-    subject = x5[0]
-    print("The subject is", subject)
+    # Search using keyword in INBOX
+    status, message = connection.search(None, '(SUBJECT "%s")' %keyword)
+
+    # Store the list of ids in a list
+    strmessage = message[0].decode("utf-8")
+    idlist = strmessage.split(' ')
+    maxid = max(idlist)
+
+    if maxid > oldmaxid:
+        # Fetch the message header using the ID
+        status, msgHead = connection.fetch(maxid, '(BODY.PEEK[HEADER])')
+        x1 = msgHead
+        x2 = x1[0][1].decode("utf-8")
+        x3 = x2.split('Subject')
+        x4 = x3[1]
+        x5 = x4.split('\r')
+        subject = x5[0]
+        print("The subject is", subject)
+
+    else:
+        print("No new email")
