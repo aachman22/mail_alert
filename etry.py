@@ -55,7 +55,9 @@ while True:
         x4 = x3[1]
         x5 = x4.split('\r')
         subject = x5[0]
-        print("The subject is", subject)
+        # print("The subject is", subject)
+        messagebox.showwarning('Mail recieved', 'Subject')
+        oldmaxid = maxid
 
     else:
         print("No new email")
